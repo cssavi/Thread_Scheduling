@@ -1,0 +1,36 @@
+- Read about counting semaphores and condition variables and explain why
+  they're considered "universal" synchronization primitives
+
+  semaphores and condition variables are considered universal synchronization primitives because their 
+  main ideas can be used to implementent multiple other primitives. In short both of these primitives use 
+  two main ideas that depend on each other. For semaphores the two ideas are the increment and the decrement 
+  value, and for condition variables it has a wait and a signal. 
+
+  https://www.geeksforgeeks.org/difference-between-semaphore-and-condition-variable/
+
+* What new race conditions are introduced by enabling interrupts
+  and preemption?
+
+  new race conditions that can occur when enabling interrupts are when different lines that use SMP::me() 
+  switch between different cores. Without disabling intterupts, these lines can run on a completely different 
+  core which would cause undefined behavior. 
+
+* What changes did you make to your design/implementation
+  in order to defend against the new race conditions?
+
+  The biggest changes to defened against these race conditions are to unclude a flag in each tcb that keeps 
+  track of what threads need to have intterupt disabled and to enable and dissable them accordingly. 
+  Implmenting blocking as opposed to spin locks also allows the cores to do more work and proccessing with the
+  help of interrupts.
+
+* why is "spinning" a bad idea? Explain
+
+Spinning is a bad idea because when we use spinning, we cause the core to spend all of its processing power 
+looping instead of doing useful work. This idea of spinning proves to be inefficient and defeats the purpose 
+of concurrency. 
+
+* can we avoid spinning? Explain
+
+Yes, one way we can avoid spinning is to use an idea of blocking which puts a thread to sleep instead of 
+aimlessly looping. By putting a thread to sleep, we can utilize the cores in a more efficient way that allows 
+it to work on more threads at a time.

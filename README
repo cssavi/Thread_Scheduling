@@ -1,0 +1,43 @@
+Due:
+    test 2/13/2023 @ 11:59pm
+    code 2/15/2023 @ 11:59pm
+
+Assignment:
+~~~~~~~~~~~
+
+    - Implement preemption
+    - Implement blocking forms of:
+          * BlockingLock
+          * BoundedBuffer
+          * Barrier
+          * Future
+          * ResuableBarrier
+    - Donate a test case
+
+
+How preemption happens:
+~~~~~~~~~~~~~~~~~~~~~~~
+
+The programmable interval timer (PIT) is programmed to generate an interrupt
+every 1ms on each core. This ends up interrupting the currently running thread and
+calling the function pitHandler (in pit.cc) on each core.
+
+pitHandler does 2 things:
+
+- updates the number of elapsed milliseconds. This is what we use to keep track
+  of time
+
+- should force a context switch on the interrupted thread (preemption)
+
+Rules:
+~~~~~~
+
+- Can't make any assumptions about exact execution order
+- All threads must get a chance to run (no thread starvation)
+- All cores must participate in running ready threads (no core starvation)
+- Blocking synchronization primitives can only spin for one of 2 reasons:
+    * to protect internal data structures (O(1) with a small constant)
+    * if the ready queue is empty
+- Can't make any assumptions about exact execution order
+- All threads must get a chance to run (no thread starvation)
+- All cores must participate in running ready threads (no core starvation)
